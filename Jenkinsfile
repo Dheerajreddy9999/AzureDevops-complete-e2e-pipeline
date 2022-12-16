@@ -38,12 +38,12 @@ pipeline {
                 script {
                     docker.withRegistry(registryUrl,registryCredential) {
                         dockerImage.push("V$BUILD_NUMBER")
-                        dockerImage.puh('latest')
+                        dockerImage.puh("latest")
                     }
                 }
             }
         }
 
-        
+
     }
 }
