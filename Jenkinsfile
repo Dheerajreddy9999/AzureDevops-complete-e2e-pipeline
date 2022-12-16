@@ -53,7 +53,9 @@ pipeline {
             steps {
                 script {
                 dir('kube-manifest') {
+                    withEnv(['DATREE_TOKEN=32b9a231-0c92-4724-ad9a-3f4a50fdae66']) {
                     sh 'helm datree test spring-app/'
+                    }
                   }
                 }
             }
@@ -62,3 +64,4 @@ pipeline {
 
     }
 }
+
