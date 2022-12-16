@@ -54,6 +54,7 @@ pipeline {
                 script {
                 dir('kube-manifest') {
                     sh 'helm datree test spring-app/'
+                  }
                 }
             }
         }
