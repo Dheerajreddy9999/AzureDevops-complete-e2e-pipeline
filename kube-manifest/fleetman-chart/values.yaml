@@ -1,8 +1,0 @@
-webapp:
-  replicas: 1
-  nodePort: 30080
-
-dockerRepoName: richardchesterwood
-
-
-environment: true
