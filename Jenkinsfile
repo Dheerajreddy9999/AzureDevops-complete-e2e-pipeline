@@ -1,7 +1,9 @@
 pipeline {
     agent any
     environment {
-        registry= "asia.gcr.io/hypnotic-camp-371708/spring-app"
+        dockerRepoName = "asia.gcr.io/hypnotic-camp-371708/spring-app"
+        registryCredential = "gcr:hypnotic-camp-371708"
+        registryUrl = "http://asia.gcr.io"
     }
     stages {
         stage('Static Code Analysis') {
@@ -26,10 +28,22 @@ pipeline {
         stage('Docker Build') {
             steps {
                 script {
-                    dockerImage = docker.build registry + ":V$BUILD_NUMBER"
+                    dockerImage = docker.build dockerRepoName + ":V$BUILD_NUMBER"
                 }
             }
         }
 
+        stage('Docker Push') {
+            steps {
+                script {
+                    docker.withRegistry(registryUrl,registryCredential) {
+                        dockerImage.push("V$BUILD_NUMBER")
+                        dockerImage.puh('latest')
+                    }
+                }
+            }
+        }
+
+        
     }
 }
