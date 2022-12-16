@@ -50,6 +50,14 @@ pipeline {
             }
         }
 
+        stage('Datree Validation') {
+            steps {
+                dir('kube-manifest') {
+                    sh 'helm datree test spring-app/'
+                }
+            }
+        }
+
 
     }
 }
