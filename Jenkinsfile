@@ -51,6 +51,7 @@ pipeline {
 
         stage('Datree Validation') {
             steps {
+                script {
                 dir('kube-manifest') {
                     sh 'helm datree test spring-app/'
                 }
