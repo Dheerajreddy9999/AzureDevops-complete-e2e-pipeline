@@ -82,7 +82,7 @@ pipeline {
                 script {
                     dir('kube-manifest/') {
                         withCredentials([file(credentialsId: 'K8CONFIG', variable: 'KubeConfig')]) {
-                          sh 'helm upgrade --install --set image.repository="${dockerRepoName}" --set image.tag="V${BUILD_NUMBER}" spring-app/'
+                          sh 'helm upgrade --install k8tutorial --set image.repository="${dockerRepoName}" --set image.tag="V${BUILD_NUMBER}" spring-app/'
                         }
                     }
                 }
