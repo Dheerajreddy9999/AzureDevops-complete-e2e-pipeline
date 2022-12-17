@@ -80,8 +80,8 @@ pipeline {
         stage('Deploy to GKE with Helm'){
             steps {
                 script {
-                    dir('kube-manifest/') {
                         withCredentials([file(credentialsId: 'K8CONFIG', variable: 'KubeConfig')]) {
+                            dir('kube-manifest/') {
                           sh 'helm upgrade --install k8tutorial --set image.repository="${dockerRepoName}" --set image.tag="V${BUILD_NUMBER}" spring-app/'
                         }
                     }
