@@ -77,6 +77,17 @@ pipeline {
             }
         }
 
+        stage('Deploy to GKE with Helm'){
+            steps {
+                script {
+                    dir('kube-manifest/') {
+                        withCredentials([file(credentialsId: 'K8CONFIG', variable: 'KubeConfig')]) {
+                            helm upgrade --install spring-app/ --set image.repository=$dockerRepoName --set tag={V$BUILD_NUMBER}
+                        }
+                    }
+            }
+        }
+
 
     }
 }
