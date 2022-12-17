@@ -14,10 +14,29 @@ spec:
     spec:
       containers:
       - name: myapp
-        image: {{ .Values.image.repository }}
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+
         resources:
+          requests:
+            memory: "128Mi"
+            cpu: "250m"
           limits:
             memory: "128Mi"
             cpu: "250m"
+
         ports:
         - containerPort: 8080
+
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 12
+          periodSeconds: 10
+        
+        livenessprobe:
+          httpGet:
+            path: /
+            port: 8080
+            initialDelaySeconds: 12
+            periodSeconds: 10
