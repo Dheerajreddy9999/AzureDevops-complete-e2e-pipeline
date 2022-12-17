@@ -2,6 +2,6 @@ replicaCount: 1
 
 image:
   repository: dheerajlearningdocker/spring-hello
-  tag: latest
+  tag: 1
   
  
