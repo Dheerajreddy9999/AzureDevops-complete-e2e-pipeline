@@ -69,7 +69,7 @@ pipeline {
                             sh '''
                                 chartversion=$( helm show chart spring-app | grep version | cut -d: -f 2 | tr -d ' ' )
                                 tar -czvf spring-app-$chartversion.tgz spring-app
-                                curl -u admin:$NexusCred http://10.182.0.8:8081/repository/helm-hosted/ --upload-file spring-app-$chartversion.tgz -v
+                                curl -u admin:$NexusCred http://34.125.151.170:8081/repository/helm-hosted/ --upload-file spring-app-$chartversion.tgz -v
                             '''
                         }
                     } 
