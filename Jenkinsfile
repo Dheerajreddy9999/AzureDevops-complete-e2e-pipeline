@@ -65,7 +65,7 @@ pipeline {
             steps {
                 script {
                     dir('kube-manifest/') {
-                        withCredentials([string(credentialsId: 'nexusPass', variable: 'NexusLogin')]) {
+                        withCredentials([string(credentialsId: 'nexusPass', variable: 'NexusCred')]) {
                             sh '''
                                 chartversion=$( helm show chart spring-app | grep version | cut -d: -f 2 | tr -d ' ' )
                                 tar -czvf spring-app-$chartversion.tgz spring-app
