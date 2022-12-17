@@ -34,7 +34,7 @@ spec:
           initialDelaySeconds: 12
           periodSeconds: 10
         
-        livenessprobe:
+        livenessProbe:
           httpGet:
             path: /
             port: 8080
