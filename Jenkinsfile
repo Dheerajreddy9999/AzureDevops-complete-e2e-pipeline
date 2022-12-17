@@ -85,6 +85,7 @@ pipeline {
                           sh 'helm upgrade --install --set image.repository="${dockerRepoName}" --set image.tag="V${BUILD_NUMBER}" spring-app/'
                         }
                     }
+                }
             }
         }
 
