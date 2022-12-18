@@ -80,10 +80,12 @@ pipeline {
         stage('Deploy to GKE with Helm'){
             steps {
                 script {
-                        withCredentials([file(credentialsId: 'K8CONFIG', variable: 'KubeConfig')]) {
-                            dir('kube-manifest/') {
-                          sh 'helm upgrade --install k8tutorial --set image.repository="${dockerRepoName}" --set image.tag="V${BUILD_NUMBER}" spring-app/'
-                        }
+                     dir('kube-manifest/') {
+                          sh '''
+                          gcloud container clusters get-credentials cluster-1 --zone us-central1-c --project hypnotic-camp-371708
+                          helm upgrade --install k8tutorial --set image.repository="${dockerRepoName}" --set image.tag="V${BUILD_NUMBER}" spring-app/
+                          '''
+
                     }
                 }
             }
