@@ -83,7 +83,7 @@ pipeline {
                      dir('kube-manifest/') {
                           sh '''
                           gcloud container clusters get-credentials cluster-1 --zone us-central1-c --project hypnotic-camp-371708
-                          helm upgrade --install k8tutorial --set image.repository="${dockerRepoName}" --set image.tag="V${BUILD_NUMBER}" spring-app/
+                          helm upgrade --install MySpringApp --set image.repository="${dockerRepoName}" --set image.tag="V${BUILD_NUMBER}" spring-app/
                           '''
 
                     }
