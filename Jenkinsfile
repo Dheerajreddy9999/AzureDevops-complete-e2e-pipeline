@@ -68,10 +68,10 @@ pipeline {
                         withCredentials([string(credentialsId: 'nexusPass', variable: 'NexusCred')]) {
                             sh '''
                                 helm repo add helm-hosted http://10.182.0.8:8081/repository/helm-hosted/ --username admin --password $NexusCred
-                                helm repo update
                                 chartversion=$( helm show chart spring-app | grep version | cut -d: -f 2 | tr -d ' ' )
                                 tar -czvf spring-app-$chartversion.tgz spring-app
                                 curl -u admin:$NexusCred http://10.182.0.8:8081/repository/helm-hosted/ --upload-file spring-app-$chartversion.tgz -v
+                                rm -rf spring-app-$chartversion
                             '''
                         }
                     } 
@@ -85,7 +85,7 @@ pipeline {
                      dir('kube-manifest/') {
                           sh '''
                           gcloud container clusters get-credentials cluster-1 --zone us-central1-c --project hypnotic-camp-371708
-                          helm upgrade --install myspringapp --set image.repository="${dockerRepoName}" --set image.tag="V${BUILD_NUMBER}" helm-hosted/spring-app
+                          helm upgrade --install myspringapp --set image.repository="${dockerRepoName}" --set image.tag="V${BUILD_NUMBER}" helm-hosted/spring-app --version 0.1.0
                           '''
 
                     }
