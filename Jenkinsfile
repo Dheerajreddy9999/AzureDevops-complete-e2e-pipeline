@@ -79,16 +79,23 @@ pipeline {
             }
         }
 
+        stage('Add Helm Repo') {
+            steps {
+                sh '''
+                helm repo add helm-hosted http://10.182.0.8:8081/repository/helm-hosted/ --username admin --password $NexusCred
+                helm repo update
+                '''
+            }
+        }
+
         stage('Deploy to GKE with Helm'){
             steps {
                 script {
                      dir('kube-manifest/') {
                           sh '''
                           gcloud container clusters get-credentials cluster-1 --zone us-central1-c --project hypnotic-camp-371708
-                          helm repo update
                           helm upgrade --install myspringapp --set image.repository="${dockerRepoName}" --set image.tag="V${BUILD_NUMBER}" helm-hosted/spring-app
                           '''
-
                     }
                 }
             }
