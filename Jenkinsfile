@@ -86,7 +86,7 @@ pipeline {
                           sh '''
                           gcloud container clusters get-credentials cluster-1 --zone us-central1-c --project hypnotic-camp-371708
                           helm repo update
-                          helm upgrade --install myspringapp --set image.repository="${dockerRepoName}" --set image.tag="V${BUILD_NUMBER}" helm-hosted/spring-app  --version="${chartversion}"
+                          helm upgrade --install myspringapp --set image.repository="${dockerRepoName}" --set image.tag="V${BUILD_NUMBER}" helm-hosted/spring-app
                           '''
 
                     }
