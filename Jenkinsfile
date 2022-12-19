@@ -70,7 +70,7 @@ pipeline {
                                 chartversion=$( helm show chart spring-app | grep version | cut -d: -f 2 | tr -d ' ' )
                                 tar -czvf spring-app-$chartversion.tgz spring-app
                                 curl -u admin:$NexusCred http://10.182.0.8:8081/repository/helm-hosted/ --upload-file spring-app-$chartversion.tgz -v
-                                rm -rf spring-app-$chartversion.tgz
+                                rm -rf spring-app-$chartversion.tgz spring-app
                                 helm repo add helm-hosted http://10.182.0.8:8081/repository/helm-hosted/ --username admin --password $NexusCred
                             '''
                         }
