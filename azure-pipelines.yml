@@ -6,7 +6,6 @@ pool: linux-agent
 
 stages:
 - stage:
-  container: openjdk:11 
   jobs:
   - job: SonarAnalysis
     steps:
