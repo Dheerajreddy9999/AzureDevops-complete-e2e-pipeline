@@ -31,46 +31,6 @@ stages:
       
     
 
-- stage: BuildAndPushDockerImage
-  jobs:
-  - job: BuildDockerImage
-    steps:
-    - task: Docker@2
-      inputs:
-        containerRegistry: '$(containerRegistry)'
-        repository: '$(dockeRepository)'
-        command: 'build'
-        Dockerfile: '**/Dockerfile'
-        tags: '$(Build.BuildId)'
-        addPipelineData: false
-        addBaseImageData: false
-  - job: PushDockerImage
-    dependsOn: BuildDockerImage
-    steps:
-    - task: Docker@2
-      inputs:
-        containerRegistry: '$(containerRegistry)'
-        repository: '$(dockeRepository)'
-        command: 'push'
-        tags: '$(Build.BuildId)'
-        addPipelineData: false
-        addBaseImageData: false
-
-    - script: |
-        docker rmi $(dockeRepository):$(Build.BuildId)
-
-- stage: DeployToDev
-  jobs:
-  - job:
-    steps:
-    - task: HelmDeploy@0
-      inputs:
-        connectionType: 'Kubernetes Service Connection'
-        kubernetesServiceConnection: '$(kube-serviceConnection)'
-        namespace: 'default'
-        command: 'upgrade'
-        chartType: 'FilePath'
-        chartPath: './my-app'
-        releaseName: 'my-gradle-app'
-        waitForExecution: false
-        arguments: '--set image.tag=$(Build.BuildId)'
+# - task: SonarQubePublish@5
+  inputs:
+    pollingTimeoutSec: '300'
