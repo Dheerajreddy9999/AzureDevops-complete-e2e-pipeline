@@ -3,7 +3,8 @@ trigger:
 
 pool: linux-agent
 
-container: openjdk:11
+container:
+  image: openjdk:11
 
 
 stages:
