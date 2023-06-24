@@ -26,18 +26,6 @@ spec:
             cpu: "250m"
 
         ports:
-        - containerPort: 8080
+        - containerPort: {{ .Values.containerPort }}
 
-        # readinessProbe:
-        #   httpGet:
-        #     path: /
-        #     port: 8080
-          # initialDelaySeconds: 12
-          # periodSeconds: 10
-        
-        # livenessProbe:
-        #   httpGet:
-        #     path: /
-        #     port: 8080
-            # initialDelaySeconds: 12
-            # periodSeconds: 10
+      
