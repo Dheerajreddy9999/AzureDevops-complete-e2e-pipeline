@@ -18,7 +18,7 @@ stages:
     steps:
     - task: SonarQubePrepare@5
       inputs:
-        SonarQube: 'sonar'
+        SonarQube: 'sonar-k8s'
         scannerMode: 'Other'
     - task: Gradle@3
       inputs:
