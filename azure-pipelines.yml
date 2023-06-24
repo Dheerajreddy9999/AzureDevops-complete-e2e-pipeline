@@ -1,0 +1,25 @@
+trigger:
+- main
+
+pool: linux-agent
+
+container: openjdk:11
+
+
+stages:
+- stage: 
+  jobs:
+  - job: SonarAnalysis
+    steps:
+    - task: SonarQubePrepare@5
+      inputs:
+        SonarQube: 'sonar'
+        scannerMode: 'Other'
+    - task: Gradle@3
+      inputs:
+        gradleWrapperFile: 'gradlew'
+        workingDirectory: './'
+        tasks: 'sonarqube'
+        publishJUnitResults: false
+        sonarQubeRunAnalysis: false
+        spotBugsAnalysis: false
