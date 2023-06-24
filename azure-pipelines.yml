@@ -8,6 +8,7 @@ stages:
 - stage:
   jobs:
   - job: SonarAnalysis
+    container: openjdk:11
     steps:
     - task: SonarQubePrepare@5
       inputs:
