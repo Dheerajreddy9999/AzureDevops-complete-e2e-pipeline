@@ -3,11 +3,10 @@ trigger:
 
 pool: linux-agent
 
-container:
-  image: openjdk:11
 
 stages:
-- stage: a 
+- stage:
+  container: openjdk:11 
   jobs:
   - job: SonarAnalysis
     steps:
