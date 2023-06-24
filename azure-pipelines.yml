@@ -28,6 +28,8 @@ stages:
         publishJUnitResults: false
         sonarQubeRunAnalysis: false
         spotBugsAnalysis: false
+      
+    
 
 - stage: BuildAndPushDockerImage
   jobs:
@@ -70,5 +72,5 @@ stages:
         chartType: 'FilePath'
         chartPath: './my-app'
         releaseName: 'my-gradle-app'
-        overrideValues: 'image.repository=$(dockeRepository)'
+        waitForExecution: false
         arguments: '--set image.tag=$(Build.BuildId)'
