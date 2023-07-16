@@ -3,7 +3,7 @@ WORKDIR /app
 COPY . .
 RUN chmod +x gradlew && ./gradlew build
 
-FROM gcr.io/distroless/java11-debian11:latest
+FROM gcr.io/distroless/java11-debian11:debug
 WORKDIR /app
 COPY --from=base /app/build/libs/Jhooq-docker-demo-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8080
