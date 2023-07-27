@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vpromq01-{{ .Release.Name }}
+  labels:
+    app: vpromq01
+spec:
+  replicas: {{ .Values.vprormq.replicacount }}
+  selector:
+    matchLabels:
+      app: vpromq01
+  template:
+    metadata:
+      labels:
+        app: vpromq01
+    spec:
+      containers:
+      - name: vpromq01
+        image: {{ .Values.vprormq.image.repository }}:{{ .Values.vprormq.image.tag }}
+        env:
+          - name: RABBITMQ_DEFAULT_PASS
+            valueFrom:
+              secretKeyRef:
+                name: app-secret
+                key: rmq-pass
+          - name: RABBITMQ_DEFAULT_USER
+            value: {{ .Values.vprormq.rmq_user }}
+              
+        ports:
+        - name: {{ .Values.vprormq.portName }}
+          containerPort: {{ .Values.vprormq.containerport }}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vpromq01
+spec:
+  selector:
+    app: vpromq01
+  ports:
+  - port: {{ .Values.vprormq.service.port }}
+    targetPort: {{ .Values.vprormq.portName }}
+  type: {{ .Values.vprormq.service.type }}
+

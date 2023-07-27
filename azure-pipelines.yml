@@ -2,9 +2,9 @@ trigger:
 - main
 
 variables:
-  dockeRepository: dheerajlearningdocker/gradle-app
+  dockeRepository: dheerajlearningdocker/vprofile-app
   containerRegistry: dockerRepo
-  kube-serviceConnection: k3d-dev
+  kube-serviceConnection: kube-agent
   sonar-connection: sonar-k8s
 
 
@@ -12,27 +12,62 @@ pool: linux-agent
 
 
 stages:
-- stage: SonarAnalysis
+- stage: MavenBuild
   jobs:
+  - job: MavenBuild
+    container:
+      image: maven:3.8.6-openjdk-8-slim
+      volumes:
+        - 'maven_data:/root/.m2/repository'
+
+    steps:
+    - task: Maven@4
+      inputs:
+        mavenPomFile: 'pom.xml'
+        goals: 'test'
+        publishJUnitResults: true
+        testResultsFiles: '**/surefire-reports/TEST-*.xml'
+        javaHomeOption: 'JDKVersion'
+        mavenVersionOption: 'Default'
+        mavenAuthenticateFeed: false
+        effectivePomSkip: false
+        sonarQubeRunAnalysis: false
+    - task: Maven@4
+      inputs:
+        mavenPomFile: 'pom.xml'
+        goals: 'verify -DskipUnitTests'
+        publishJUnitResults: true
+        testResultsFiles: '**/surefire-reports/TEST-*.xml'
+        javaHomeOption: 'JDKVersion'
+        mavenVersionOption: 'Default'
+        mavenAuthenticateFeed: false
+        effectivePomSkip: false
+        sonarQubeRunAnalysis: false
+   
   - job: SonarAnalysis
-    container: openjdk:11
+    dependsOn: MavenBuild
+    container:
+      image: maven:3.8.6-openjdk-11-slim
+      
     steps:
     - task: SonarQubePrepare@5
       inputs:
-        SonarQube: '$(sonar-connection)'
-        scannerMode: 'Other'
-    - task: Gradle@3
+        SonarQube: 'sonar-k8s'
+        scannerMode: 'CLI'
+        configMode: 'manual'
+        cliProjectKey: 'vprofile-repo'
+        cliProjectName: 'vprofile-repo'
+        cliSources: './src'
+        extraProperties: |
+          sonar.java.binaries=.
+          
+    - task: SonarQubeAnalyze@5
       inputs:
-        gradleWrapperFile: 'gradlew'
-        workingDirectory: './'
-        tasks: 'sonarqube'
-        publishJUnitResults: false
-        sonarQubeRunAnalysis: false
-        spotBugsAnalysis: false
+        jdkversion: 'JAVA_HOME'
     - task: SonarQubePublish@5
       inputs:
         pollingTimeoutSec: '300'
-
+  
 - stage: BuildAndPushDockerImage
 
   jobs:
@@ -73,7 +108,9 @@ stages:
         namespace: 'default'
         command: 'upgrade'
         chartType: 'FilePath'
-        chartPath: './my-app'
-        releaseName: 'my-gradle-app'
+        chartPath: './helm/vprofilechart'
+        releaseName: 'ecommerce-app'
         waitForExecution: false
-        arguments: '--set image.tag=$(Build.BuildId)'
+        arguments: '--set vproapp.image.repository=$(dockeRepository) 
+                    --set vproapp.image.tag=$(Build.BuildId)  '
+   

@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: vprodb-{{ .Release.Name }}
+spec:
+  selector:
+    matchLabels:
+      app: vprodb
+  serviceName: "vprodb"
+  replicas: {{ .Values.vprodb.replicacount }}
+  template:
+    metadata:
+      labels:
+        app: vprodb
+    spec:
+      containers:
+      - name: vprodb
+        image: {{ .Values.vprodb.image.repository }}:{{ .Values.vprodb.image.tag }}
+        args:
+          - "--ignore-db-dir=lost+found"
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: app-secret
+                key: db-pass
+        ports:
+        - containerPort: {{ .Values.vprodb.containerport }}
+          name: {{ .Values.vprodb.portName }}
+        volumeMounts:
+        - name: mypvc
+          mountPath: {{ .Values.vprodb.mountPath }}
+  volumeClaimTemplates:
+  - metadata:
+      name: mypvc
+    spec:
+      accessModes: [ {{ .Values.vprodb.persistance.accessModes | quote }} ]
+      resources:
+        requests:
+          storage: {{ .Values.vprodb.persistance.storage }}
+    
+        
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: vprodb
+spec:
+  selector:
+    app: vprodb
+  ports:
+  - port: {{ .Values.vprodb.service.port }}
+    targetPort: {{ .Values.vprodb.portName }}
+  selector:
+    app: vprodb
+  clusterIP: None
+
+

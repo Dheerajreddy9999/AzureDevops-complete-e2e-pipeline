@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vpromc-{{ .Release.Name }}
+  labels:
+    app: vpromc
+spec:
+  replicas: {{ .Values.vpromc.replicacount }}
+  selector:
+    matchLabels:
+      app: vpromc
+  template:
+    metadata:
+      labels:
+        app: vpromc
+    spec:
+      containers:
+      - name: vpromc
+        image: {{ .Values.vpromc.image.repository }}:{{ .Values.vpromc.image.tag }}
+        ports:
+        - name: {{ .Values.vpromc.portName }}
+          containerPort: {{ .Values.vpromc.containerport }}
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: vprocache01
+spec:
+  selector:
+    app: vpromc
+  ports:
+  - port: {{ .Values.vpromc.service.port }}
+    targetPort: {{ .Values.vpromc.portName }}
+  type: {{ .Values.vpromc.service.type }}
+
