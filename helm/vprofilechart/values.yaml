@@ -8,7 +8,7 @@ vproapp:
   portName: vproapp-port
   service:
     port: 80
-    type: NodePort
+    type: LoadBalancer
     nodePort: 30000
 
 # Default values for memcache
