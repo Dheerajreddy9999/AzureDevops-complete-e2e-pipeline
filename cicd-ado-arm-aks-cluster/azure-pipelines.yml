@@ -1,0 +1,25 @@
+trigger:
+- master
+
+pool: linux-agent
+
+stages:
+- stage: Azure_aks
+  jobs:
+  - job: 
+    steps:
+    - task: AzureResourceManagerTemplateDeployment@3
+      inputs:
+        deploymentScope: 'Resource Group'
+        azureResourceManagerConnection: 'Free Trial(d01f29a3-4c6f-413d-bddf-1e1efe751fdb)'
+        subscriptionId: 'd01f29a3-4c6f-413d-bddf-1e1efe751fdb'
+        action: 'Create Or Update Resource Group'
+        resourceGroupName: 'NetworkWatcherRG'
+        location: 'East US'
+        templateLocation: 'Linked artifact'
+        csmFile: '$(system.defaultworkingdirectory)/AKS.json'
+        overrideParameters: '-aksClusterName aks101cluster-prod'
+        deploymentMode: 'Incremental'
+        deploymentName: 'Create_AKS_cluster'
+        
+   
